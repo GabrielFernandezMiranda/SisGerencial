@@ -1,0 +1,58 @@
+{
+	"name": "DS_CSV_SplEntregasSuper",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_Storage_CSVs",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "spl_entregas_supermercado.csv",
+				"folderPath": "spl",
+				"container": "raw-data"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "entrega_super_id",
+				"type": "String"
+			},
+			{
+				"name": "asignacion_id",
+				"type": "String"
+			},
+			{
+				"name": "ci_beneficiaria",
+				"type": "String"
+			},
+			{
+				"name": "supermercado_id",
+				"type": "String"
+			},
+			{
+				"name": "fecha_retiro",
+				"type": "String"
+			},
+			{
+				"name": "tipo_carne",
+				"type": "String"
+			},
+			{
+				"name": "cantidad_kg",
+				"type": "String"
+			},
+			{
+				"name": "monto_bs",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

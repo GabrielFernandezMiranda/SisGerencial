@@ -1,0 +1,147 @@
+{
+	"name": "DF_Gold_Fact_Entregas",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"linkedService": {
+						"referenceName": "LS_SQL_Destino",
+						"type": "LinkedServiceReference"
+					},
+					"name": "SUP"
+				},
+				{
+					"linkedService": {
+						"referenceName": "LS_SQL_Destino",
+						"type": "LinkedServiceReference"
+					},
+					"name": "SPL"
+				}
+			],
+			"sinks": [
+				{
+					"linkedService": {
+						"referenceName": "LS_SQL_Destino",
+						"type": "LinkedServiceReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "derivedColumn2"
+				},
+				{
+					"name": "select1"
+				},
+				{
+					"name": "select2"
+				},
+				{
+					"name": "union1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          entrega_id as string,",
+				"          boleta_id as string,",
+				"          ci_beneficiaria as string,",
+				"          establecimiento_id as string,",
+				"          paquete_id as string,",
+				"          paquete_nombre as string,",
+				"          fecha_entrega as string,",
+				"          lote_produccion as string,",
+				"          peso_paquete_kg as string,",
+				"          fecha_proxima_entrega as string,",
+				"          ci as string,",
+				"          nombres as string,",
+				"          apellido_paterno as string,",
+				"          apellido_materno as string,",
+				"          fecha_nacimiento as string,",
+				"          genero as string,",
+				"          estado_civil as string,",
+				"          ci_conyuge as string,",
+				"          numero_hijos as string,",
+				"          ci_padre as string,",
+				"          ci_madre as string,",
+				"          profesion as string,",
+				"          nivel_estudios as string,",
+				"          municipio_residencia as string,",
+				"          fecha_emision as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table',",
+				"     store: 'sqlserver',",
+				"     schemaName: 'silver',",
+				"     tableName: 'sup_entregas',",
+				"     isolationLevel: 'READ_UNCOMMITTED') ~> SUP",
+				"source(output(",
+				"          entrega_super_id as string,",
+				"          asignacion_id as string,",
+				"          ci_beneficiaria as string,",
+				"          supermercado_id as string,",
+				"          fecha_retiro as string,",
+				"          tipo_carne as string,",
+				"          cantidad_kg as string,",
+				"          monto_bs as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table',",
+				"     store: 'sqlserver',",
+				"     schemaName: 'silver',",
+				"     tableName: 'spl_EntregasSuper',",
+				"     isolationLevel: 'READ_UNCOMMITTED') ~> SPL",
+				"SUP derive(origen = 'SUP',",
+				"          monto_bs = '0',",
+				"          fecha_entrega = toDate(fecha_entrega)) ~> derivedColumn1",
+				"SPL derive(origen = 'SPL',",
+				"          fecha_retiro = toDate(fecha_retiro)) ~> derivedColumn2",
+				"derivedColumn1 select(mapColumn(",
+				"          id_transaccion = entrega_id,",
+				"          ci_beneficiaria,",
+				"          id_establecimiento = establecimiento_id,",
+				"          id_producto = paquete_id,",
+				"          fecha_transaccion = fecha_entrega,",
+				"          peso_kg = peso_paquete_kg,",
+				"          origen,",
+				"          monto_bs",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"derivedColumn2 select(mapColumn(",
+				"          id_transaccion = entrega_super_id,",
+				"          ci_beneficiaria,",
+				"          id_establecimiento = supermercado_id,",
+				"          fecha_transaccion = fecha_retiro,",
+				"          id_producto = tipo_carne,",
+				"          peso_kg = cantidad_kg,",
+				"          monto_bs,",
+				"          origen",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select2",
+				"select1, select2 union(byName: true)~> union1",
+				"union1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table',",
+				"     store: 'sqlserver',",
+				"     schemaName: 'gold',",
+				"     tableName: 'fact_entregas_global',",
+				"     insertable: true,",
+				"     updateable: false,",
+				"     deletable: false,",
+				"     upsertable: false,",
+				"     recreate: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+			]
+		}
+	}
+}

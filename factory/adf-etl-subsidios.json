@@ -1,0 +1,10 @@
+{
+	"name": "adf-etl-subsidios",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Disabled",
+			"editable": true
+		}
+	},
+	"location": "centralus"
+}

@@ -1,0 +1,371 @@
+{
+	"name": "DF_Silver_SPL_Completo",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_SQL_SplAfiliaciones",
+						"type": "DatasetReference"
+					},
+					"name": "OrigenBronceBJA"
+				},
+				{
+					"linkedService": {
+						"referenceName": "LS_SQL_Destino",
+						"type": "LinkedServiceReference"
+					},
+					"name": "OrigenSilverSEGIP"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_SQL_SplCertificados",
+						"type": "DatasetReference"
+					},
+					"name": "OrigenBronceSplCertificados"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_SQL_SplAsignaciones",
+						"type": "DatasetReference"
+					},
+					"name": "OrigenSPLasignaciones"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_SQL_SplEntregasSuper",
+						"type": "DatasetReference"
+					},
+					"name": "OrigenBronceEntregasSupermercados"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_SQL_SplEntregasAgencia",
+						"type": "DatasetReference"
+					},
+					"name": "OrigenSPlentregasAgencia"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_SQL_SplCajas",
+						"type": "DatasetReference"
+					},
+					"name": "OrigenSplBronceCajas"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_SQL_SplSupermercados",
+						"type": "DatasetReference"
+					},
+					"name": "OrigenBronceSplSupermercados"
+				}
+			],
+			"sinks": [
+				{
+					"linkedService": {
+						"referenceName": "LS_SQL_Destino",
+						"type": "LinkedServiceReference"
+					},
+					"name": "DestinoSilverSPL"
+				},
+				{
+					"linkedService": {
+						"referenceName": "LS_SQL_Destino",
+						"type": "LinkedServiceReference"
+					},
+					"name": "DestinoCertificado"
+				},
+				{
+					"linkedService": {
+						"referenceName": "LS_SQL_Destino",
+						"type": "LinkedServiceReference"
+					},
+					"name": "DestinoSilverAsignaciones"
+				},
+				{
+					"linkedService": {
+						"referenceName": "LS_SQL_Destino",
+						"type": "LinkedServiceReference"
+					},
+					"name": "DestinoEntregasSupermercado"
+				},
+				{
+					"linkedService": {
+						"referenceName": "LS_SQL_Destino",
+						"type": "LinkedServiceReference"
+					},
+					"name": "DEstinoSilverAgencias"
+				},
+				{
+					"linkedService": {
+						"referenceName": "LS_SQL_Destino",
+						"type": "LinkedServiceReference"
+					},
+					"name": "DestinoSilverCajas"
+				},
+				{
+					"linkedService": {
+						"referenceName": "LS_SQL_Destino",
+						"type": "LinkedServiceReference"
+					},
+					"name": "DestinoSplSupermercados"
+				}
+			],
+			"transformations": [
+				{
+					"name": "CruceSEGIP"
+				},
+				{
+					"name": "filter1"
+				},
+				{
+					"name": "filter2"
+				},
+				{
+					"name": "filter3"
+				},
+				{
+					"name": "filter4"
+				},
+				{
+					"name": "filter5"
+				},
+				{
+					"name": "filter6"
+				},
+				{
+					"name": "filter7"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          afiliacion_id as string,",
+				"          ci_beneficiaria as string,",
+				"          empleador_id as string,",
+				"          caja_id as string,",
+				"          fecha_afiliacion as string,",
+				"          nro_matricula as string,",
+				"          tipo_subsidio as string,",
+				"          estado as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> OrigenBronceBJA",
+				"source(output(",
+				"          ci as string,",
+				"          nombres as string,",
+				"          apellido_paterno as string,",
+				"          apellido_materno as string,",
+				"          fecha_nacimiento as string,",
+				"          genero as string,",
+				"          estado_civil as string,",
+				"          ci_conyuge as string,",
+				"          numero_hijos as string,",
+				"          ci_padre as string,",
+				"          ci_madre as string,",
+				"          profesion as string,",
+				"          nivel_estudios as string,",
+				"          municipio_residencia as string,",
+				"          fecha_emision as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table',",
+				"     store: 'sqlserver',",
+				"     schemaName: 'silver',",
+				"     tableName: 'segip',",
+				"     isolationLevel: 'READ_UNCOMMITTED') ~> OrigenSilverSEGIP",
+				"source(output(",
+				"          certificado_id as string,",
+				"          afiliacion_id as string,",
+				"          fecha_emision as string,",
+				"          semana_gestacion as string,",
+				"          fecha_probable_parto as string,",
+				"          medico_responsable as string,",
+				"          estado as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> OrigenBronceSplCertificados",
+				"source(output(",
+				"          asignacion_id as string,",
+				"          afiliacion_id as string,",
+				"          mes as string,",
+				"          gestion as string,",
+				"          monto_bs as string,",
+				"          monto_productos as string,",
+				"          monto_carnes as string,",
+				"          estado as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> OrigenSPLasignaciones",
+				"source(output(",
+				"          entrega_super_id as string,",
+				"          asignacion_id as string,",
+				"          ci_beneficiaria as string,",
+				"          supermercado_id as string,",
+				"          fecha_retiro as string,",
+				"          tipo_carne as string,",
+				"          cantidad_kg as string,",
+				"          monto_bs as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> OrigenBronceEntregasSupermercados",
+				"source(output(",
+				"          entrega_ag_id as string,",
+				"          asignacion_id as string,",
+				"          ci_beneficiaria as string,",
+				"          fecha_entrega as string,",
+				"          productos as string,",
+				"          lote as string,",
+				"          peso_kg as string,",
+				"          punto_entrega as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> OrigenSPlentregasAgencia",
+				"source(output(",
+				"          ID as string,",
+				"          Nombre as string,",
+				"          Sigla as string,",
+				"          Tipo as string,",
+				"          Estado as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> OrigenSplBronceCajas",
+				"source(output(",
+				"          ID as string,",
+				"          Cadena as string,",
+				"          Sucursal as string,",
+				"          Municipio as string,",
+				"          {Dirección} as string,",
+				"          Estado as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> OrigenBronceSplSupermercados",
+				"filter1, OrigenSilverSEGIP join(ci_beneficiaria == ci,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> CruceSEGIP",
+				"OrigenBronceBJA filter(!isNull(ci_beneficiaria) && !isNull(fecha_afiliacion)) ~> filter1",
+				"OrigenBronceSplCertificados filter(!isNull(certificado_id) && !isNull(afiliacion_id)) ~> filter2",
+				"OrigenSPLasignaciones filter(!isNull(asignacion_id) && !isNull(afiliacion_id)) ~> filter3",
+				"OrigenBronceEntregasSupermercados filter(!isNull(ci_beneficiaria) && !isNull(fecha_retiro)) ~> filter4",
+				"OrigenSPlentregasAgencia filter(!isNull(ci_beneficiaria) && !isNull(fecha_entrega)) ~> filter5",
+				"OrigenSplBronceCajas filter(!isNull(ID) && !isNull(Nombre)) ~> filter6",
+				"OrigenBronceSplSupermercados filter(!isNull(ID) && !isNull(Cadena)) ~> filter7",
+				"CruceSEGIP sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table',",
+				"     store: 'sqlserver',",
+				"     schemaName: 'silver',",
+				"     tableName: 'spl_afiliaciones',",
+				"     insertable: true,",
+				"     updateable: false,",
+				"     deletable: false,",
+				"     upsertable: false,",
+				"     recreate: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> DestinoSilverSPL",
+				"filter2 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table',",
+				"     store: 'sqlserver',",
+				"     schemaName: 'silver',",
+				"     tableName: 'spl_certificados',",
+				"     insertable: true,",
+				"     updateable: false,",
+				"     deletable: false,",
+				"     upsertable: false,",
+				"     recreate: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> DestinoCertificado",
+				"filter3 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table',",
+				"     store: 'sqlserver',",
+				"     schemaName: 'silver',",
+				"     tableName: 'spl_asignaciones',",
+				"     insertable: true,",
+				"     updateable: false,",
+				"     deletable: false,",
+				"     upsertable: false,",
+				"     recreate: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> DestinoSilverAsignaciones",
+				"filter4 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table',",
+				"     store: 'sqlserver',",
+				"     schemaName: 'silver',",
+				"     tableName: 'spl_EntregasSuper',",
+				"     insertable: true,",
+				"     updateable: false,",
+				"     deletable: false,",
+				"     upsertable: false,",
+				"     recreate: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> DestinoEntregasSupermercado",
+				"filter5 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table',",
+				"     store: 'sqlserver',",
+				"     schemaName: 'silver',",
+				"     tableName: 'spl_EntregasAgencia',",
+				"     insertable: true,",
+				"     updateable: false,",
+				"     deletable: false,",
+				"     upsertable: false,",
+				"     recreate: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> DEstinoSilverAgencias",
+				"filter6 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table',",
+				"     store: 'sqlserver',",
+				"     schemaName: 'silver',",
+				"     tableName: 'spl_cajas',",
+				"     insertable: true,",
+				"     updateable: false,",
+				"     deletable: false,",
+				"     upsertable: false,",
+				"     recreate: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> DestinoSilverCajas",
+				"filter7 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table',",
+				"     store: 'sqlserver',",
+				"     schemaName: 'silver',",
+				"     tableName: 'spl_supermercados',",
+				"     insertable: true,",
+				"     updateable: false,",
+				"     deletable: false,",
+				"     upsertable: false,",
+				"     recreate: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> DestinoSplSupermercados"
+			]
+		}
+	}
+}

@@ -1,0 +1,17 @@
+{
+	"name": "DS_SQL_SplAsignaciones",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_SQL_Destino",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "bronze",
+			"table": "spl_asignaciones_mensuales"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

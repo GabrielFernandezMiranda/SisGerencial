@@ -1,0 +1,158 @@
+{
+	"name": "DF_Gold_Dim_Establecimiento",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"linkedService": {
+						"referenceName": "LS_SQL_Destino",
+						"type": "LinkedServiceReference"
+					},
+					"name": "OrigenGoldBJA"
+				},
+				{
+					"linkedService": {
+						"referenceName": "LS_SQL_Destino",
+						"type": "LinkedServiceReference"
+					},
+					"name": "OrigenSilverSPL"
+				},
+				{
+					"linkedService": {
+						"referenceName": "LS_SQL_Destino",
+						"type": "LinkedServiceReference"
+					},
+					"name": "OrigenSilverSUP"
+				}
+			],
+			"sinks": [
+				{
+					"linkedService": {
+						"referenceName": "LS_SQL_Destino",
+						"type": "LinkedServiceReference"
+					},
+					"name": "DestinoGoldEstablecimientos"
+				}
+			],
+			"transformations": [
+				{
+					"name": "select1"
+				},
+				{
+					"name": "select2"
+				},
+				{
+					"name": "select3"
+				},
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "derivedColumn2"
+				},
+				{
+					"name": "derivedColumn3"
+				},
+				{
+					"name": "union1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          establecimiento_id as string,",
+				"          codigo_snis as string,",
+				"          nombre as string,",
+				"          tipo as string,",
+				"          nivel_atencion as string,",
+				"          municipio as string,",
+				"          departamento as string,",
+				"          red_salud as string,",
+				"          estado as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table',",
+				"     store: 'sqlserver',",
+				"     schemaName: 'silver',",
+				"     tableName: 'bja_establecimientos',",
+				"     isolationLevel: 'READ_UNCOMMITTED') ~> OrigenGoldBJA",
+				"source(output(",
+				"          ID as string,",
+				"          Cadena as string,",
+				"          Sucursal as string,",
+				"          Municipio as string,",
+				"          {Dirección} as string,",
+				"          Estado as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table',",
+				"     store: 'sqlserver',",
+				"     schemaName: 'silver',",
+				"     tableName: 'spl_supermercados',",
+				"     isolationLevel: 'READ_UNCOMMITTED') ~> OrigenSilverSPL",
+				"source(output(",
+				"          establecimiento_id as string,",
+				"          codigo_snis as string,",
+				"          nombre as string,",
+				"          tipo as string,",
+				"          nivel_atencion as string,",
+				"          municipio as string,",
+				"          departamento as string,",
+				"          red_salud as string,",
+				"          estado as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table',",
+				"     store: 'sqlserver',",
+				"     schemaName: 'silver',",
+				"     tableName: 'sup_establecimientos',",
+				"     isolationLevel: 'READ_UNCOMMITTED') ~> OrigenSilverSUP",
+				"OrigenGoldBJA select(mapColumn(",
+				"          establecimiento_id,",
+				"          nombre,",
+				"          municipio",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"OrigenSilverSPL select(mapColumn(",
+				"          establecimiento_id = ID,",
+				"          nombre = Cadena,",
+				"          municipio = Municipio",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select2",
+				"OrigenSilverSUP select(mapColumn(",
+				"          establecimiento_id,",
+				"          nombre,",
+				"          municipio",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select3",
+				"select2 derive(establecimiento_id = concat('SPL-', toString(establecimiento_id)),",
+				"          sistema = 'SPL') ~> derivedColumn1",
+				"select1 derive(establecimiento_id = concat('BJA-', toString(establecimiento_id)),",
+				"          sistema = 'BJA') ~> derivedColumn2",
+				"select3 derive(establecimiento_id = concat('SUP-', toString(establecimiento_id)),",
+				"          sistema = 'SUP') ~> derivedColumn3",
+				"derivedColumn2, derivedColumn1, derivedColumn3 union(byName: true)~> union1",
+				"union1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table',",
+				"     store: 'sqlserver',",
+				"     schemaName: 'gold',",
+				"     tableName: 'dim_establecimiento',",
+				"     insertable: true,",
+				"     updateable: false,",
+				"     deletable: false,",
+				"     upsertable: false,",
+				"     recreate: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> DestinoGoldEstablecimientos"
+			]
+		}
+	}
+}

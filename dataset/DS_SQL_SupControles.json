@@ -1,0 +1,17 @@
+{
+	"name": "DS_SQL_SupControles",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_SQL_Destino",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "bronze",
+			"table": "sup_controles"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

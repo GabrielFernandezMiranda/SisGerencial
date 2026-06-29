@@ -1,0 +1,17 @@
+{
+	"name": "DS_SQL_BjaInscripciones",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_SQL_Destino",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "bronze",
+			"table": "bja_inscripciones"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

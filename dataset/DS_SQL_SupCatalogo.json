@@ -1,0 +1,17 @@
+{
+	"name": "DS_SQL_SupCatalogo",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_SQL_Destino",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "bronze",
+			"table": "sup_catalogo_paquetes"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

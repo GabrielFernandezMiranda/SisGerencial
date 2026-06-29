@@ -1,0 +1,58 @@
+{
+	"name": "DS_CSV_BjaPagos",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_Storage_CSVs",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "bja_pagos.csv",
+				"folderPath": "bja",
+				"container": "raw-data"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "pago_id",
+				"type": "String"
+			},
+			{
+				"name": "ci_beneficiaria",
+				"type": "String"
+			},
+			{
+				"name": "concepto_pago",
+				"type": "String"
+			},
+			{
+				"name": "monto_bs",
+				"type": "String"
+			},
+			{
+				"name": "fecha_pago",
+				"type": "String"
+			},
+			{
+				"name": "estado_pago",
+				"type": "String"
+			},
+			{
+				"name": "canal_pago",
+				"type": "String"
+			},
+			{
+				"name": "nro_comprobante",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

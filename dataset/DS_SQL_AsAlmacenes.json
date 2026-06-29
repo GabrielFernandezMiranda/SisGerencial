@@ -1,0 +1,17 @@
+{
+	"name": "DS_SQL_AsAlmacenes",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_SQL_Destino",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "bronze",
+			"table": "as_almacenes"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
